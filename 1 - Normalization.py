@@ -32,6 +32,6 @@ def normalize_docx_and_save(input_path: str, output_path: str):
 
 # Example usage
 if __name__ == "__main__":
-    input_file = "Final - R11749001.docx"
-    output_file = "Final - R11749001_normalized.txt"
+    input_file = "/Users/alfonso/Documents/Vectorization/vectorization/Testing Data/Final - R11749001.docx"
+    output_file = "/Users/alfonso/Documents/Vectorization/vectorization/Normalized Data/Final - R11749001_normalized.txt"
     normalize_docx_and_save(input_file, output_file)
