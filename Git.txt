@@ -1,0 +1,20 @@
+# Set Up Git Locally
+# Navigate to your project folder
+cd path/to/your/project
+
+# Initialize Git
+git init
+
+# Connect to your GitHub repo
+git remote add origin https://github.com/your-username/my-python-project.git
+
+
+# Add all files to staging
+git add .
+
+# Commit with a message
+git commit -m "Initial commit"
+
+
+# Push your code to GitHub
+git push -u origin master
