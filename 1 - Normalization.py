@@ -1,6 +1,7 @@
 import spacy
 import docx  # for reading .docx files
 import os
+import re
 
 # Load spaCy English model
 nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
@@ -26,6 +27,9 @@ def read_docx_text(filepath: str) -> str:
 
 def normalize_text(text: str) -> str:
     """Normalize text: lowercase, remove stopwords/punctuation, lemmatize."""
+    # Remove student number patterns like R12345678 using regex
+    text = re.sub(r"\bR\d{8}\b", "", text, flags=re.IGNORECASE)
+
     doc = nlp(text.lower())
     tokens = [
         token.lemma_ for token in doc
