@@ -10,6 +10,24 @@ nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
 folder_path = "Testing Data"
 output_folder = "Normalized Data"
 
+  # Define keyword library (lowercase for comparison)
+HEADER_KEYWORDS = {
+        "chatgpt",
+        "chat gpt",
+        "feedback",
+        "comment",
+        "advice",
+        "suggestion",
+        "improvement",
+        "improved",
+        "revision",
+        "review",
+        "peer",
+        "ai"
+    }
+
+STUDENT_ID_PATTERN = re.compile(r"\b[ABRT]\d{8}\b", re.IGNORECASE)
+
 # Ensure the output folder exists and clean it
 os.makedirs(output_folder, exist_ok=True)
 for f in os.listdir(output_folder):
@@ -19,17 +37,31 @@ for f in os.listdir(output_folder):
 
 
 def read_docx_text(filepath: str) -> str:
-    """Read text from a .docx file."""
+    """Read text from a .docx file and remove top lines containing predefined keywords."""
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
+
+    # Extract non-empty paragraph text
     doc = docx.Document(filepath)
-    return "\n".join([para.text for para in doc.paragraphs if para.text.strip()])
+    paragraphs = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
+
+    # Step 1: Remove header lines (first two lines with keywords)
+    for i in range(min(2, len(paragraphs))):
+        line = paragraphs[i].lower()
+        if any(keyword in line for keyword in HEADER_KEYWORDS):
+            paragraphs[i] = ""
+
+    # Step 2: Remove any line containing a student ID
+    cleaned_paragraphs = [
+        p for p in paragraphs
+        if p and not STUDENT_ID_PATTERN.search(p)
+    ]
+
+    return "\n".join(cleaned_paragraphs)
+
 
 def normalize_text(text: str) -> str:
     """Normalize text: lowercase, remove stopwords/punctuation, lemmatize."""
-    # Remove student number patterns like R12345678 using regex
-    text = re.sub(r"\bR\d{8}\b", "", text, flags=re.IGNORECASE)
-
     doc = nlp(text.lower())
     tokens = [
         token.lemma_ for token in doc
