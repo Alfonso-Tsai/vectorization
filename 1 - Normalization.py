@@ -23,7 +23,8 @@ HEADER_KEYWORDS = {
         "revision",
         "review",
         "peer",
-        "ai"
+        "ai",
+        "final"
     }
 
 STUDENT_ID_PATTERN = re.compile(r"\b[ABRT]\d{8}\b", re.IGNORECASE)
